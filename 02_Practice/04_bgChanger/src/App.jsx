@@ -1,15 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [color, setColor] = useState('#2b2b2b');
-
-  // One way of updating the color - a callback method that updates the color
-  // const updateColor = (color) => {
-  //   setColor(color);
-  // }
 
   const colors = [
     { text: "Red", color: "#FF4444" },
@@ -18,6 +13,17 @@ function App() {
     { text: "Purple", color: "#9933FF" },
     { text: "Orange", color: "#FF9933" }
   ];
+
+  // Toggle color with keyboard Keys
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "r") setColor("#FF4444");
+      if (e.key === "g") setColor("#00CC66");
+      if (e.key === "b") setColor("#3399FF");
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   return (
     <div className="w-full h-screen duration-200 p-0 flex flex-col justify-between py-12" style={{ backgroundColor: color }}>
@@ -38,7 +44,7 @@ function App() {
             ))
           }
         </div>
-        <p className="w-fit self-center text-white">Current Color: <span className='outline-none px-4 py-1 rounded-full shadow-lg' style={{color: color, backgroundColor: "black"}}>{color}</span></p>
+        <p className="w-fit self-center text-white">Current Color: <span className='outline-none px-4 py-1 rounded-full shadow-lg' style={{ color: color, backgroundColor: "black" }}>{color}</span></p>
       </div>
       <div className='flex flex-wrap justify-center bottom-2'>
         <button
