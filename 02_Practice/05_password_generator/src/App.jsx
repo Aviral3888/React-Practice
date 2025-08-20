@@ -7,12 +7,18 @@ function App() {
   const [isCharAllowed, setIsCharAllowed] = useState(false);
   const [password, setPassword] = useState('');
 
+  const [isUpperCaseAllowed, setIsUpperCaseAllowed] = useState(false);
+  const [isLowerCaseAllowed, setIsLowerCaseAllowed] = useState(true);
+
+
   const passwordRef = useRef(null);
 
   const generatePassword = useCallback(() => {
     let password = "";
-    let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let str = "abcdefghijklmnopqrstuvwxyz";
 
+    if (isUpperCaseAllowed) str += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (isLowerCaseAllowed) str += "abcdefghijklmnopqrstuvwxyz";
     if (isNumberAllowed) str += "0123456789";
     if (isCharAllowed) str += "!#$%&'()*+,-./:;<=>?@[\]^_{|}~`"
 
@@ -21,15 +27,15 @@ function App() {
       password += str.charAt(char);
     }
     setPassword(password);
-  }, [length, isNumberAllowed, isCharAllowed]);
+  }, [length, isNumberAllowed, isCharAllowed, isUpperCaseAllowed]);
 
-  useEffect(()=> {
+  useEffect(() => {
     generatePassword();
-  }, [length, isNumberAllowed, isCharAllowed])
+  }, [length, isNumberAllowed, isCharAllowed, isUpperCaseAllowed])
 
   const copyPasswordToClipboard = () => {
     window.navigator.clipboard.writeText(password);
-   passwordRef.current?.select(); 
+    passwordRef.current?.select();
   }
 
   return (
@@ -44,7 +50,7 @@ function App() {
           readOnly
           ref={passwordRef}
         />
-        <button 
+        <button
           className='outline-none bg-blue-700 text-white py-0.5 px-3 shrink-0'
           onClick={copyPasswordToClipboard}
         >Copy</button>
@@ -62,6 +68,19 @@ function App() {
             id=''
           />
           <label htmlFor="length">Length: {length}</label>
+        </div>
+
+        <div className='flex items-center gap-x-1'>
+          <input
+            type="checkbox"
+            defaultChecked={isUpperCaseAllowed}
+            onChange={() => {
+              setIsUpperCaseAllowed((prev) => !prev);
+            }}
+            name=''
+            id=''
+          />
+          <label htmlFor="uppercase">Uppercase Characters</label>
         </div>
 
         <div className='flex items-center gap-x-1'>
